@@ -7,6 +7,15 @@ const createCustomer = async (formData) => {
   const creating_age = formData.get("age");
   const creating_gender = formData.get("gender");
 
+
+  // ----- 追加: customer_id が null または空の場合はエラーを投げるバリデーション -----
+  if (!creating_customer_id) {
+    throw new Error("customer_id が必須です。登録できません。");
+  }
+  // ------------------------------------------------------------------------------
+
+ 
+
   const body_msg = JSON.stringify({
     customer_name: creating_customer_name,
     customer_id: creating_customer_id,

@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef,useState } from "react"; // useState を追加
 import { useRouter } from "next/navigation";
 
 import createCustomer from "./createCustomer";
@@ -7,12 +7,21 @@ import createCustomer from "./createCustomer";
 export default function CreatePage() {
   const formRef = useRef();
   const router = useRouter();
+  const [error, setError] = useState(""); // 追加: エラーメッセージを保持する状態
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(formRef.current);
-    await createCustomer(formData);
-    router.push(`./create/confirm?customer_id=${formData.get("customer_id")}`);
+    try {
+      setError(""); // 送信前にエラーをクリア
+      await createCustomer(formData);
+      router.push(`./create/confirm?customer_id=${formData.get("customer_id")}`);
+    } catch (err) {
+      // ここで createCustomer の throw Error をキャッチして表示
+      setError(err.message);
+       // アラートを表示
+      alert("IDは必須です"); 
+    }
   };
 
   return (
